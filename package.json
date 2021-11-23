@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Connecshaun/tinyapp/issues"
   },
-  "homepage": "https://github.com/Connecshaun/tinyapp#readme"
+  "homepage": "https://github.com/Connecshaun/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
