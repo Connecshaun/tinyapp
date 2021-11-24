@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 
+//tells our express app to use EJS as its template engine
 app.set("view engine", "ejs");
 
 
@@ -14,6 +15,11 @@ const urlDatabase = {
 app.get("/", (req, res) => {
 res.send("Hello!");
 });
+
+app.get("/urls", (req, res) => {
+  const templateVars = {urls: urlDatabase};
+  res.render("urls_index", templateVars);
+})
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
