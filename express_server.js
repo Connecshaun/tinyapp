@@ -6,6 +6,9 @@ const PORT = 8080;
 //tells our express app to use EJS as its template engine
 app.set("view engine", "ejs");
 
+//install and require body-parser to make a POST request readable
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
