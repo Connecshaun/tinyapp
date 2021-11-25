@@ -10,10 +10,6 @@ app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-const generateRandomString = () => {
-  Math.random().toString(36).substr(2, 6)
-};
-
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -24,13 +20,15 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+const generateRandomString = function () {
+  return Math.random().toString(36).slice(0, 6)
+};
+
 app.post("/urls", (req, res) => {
-  let shortURL = generateRandomString();
-  let longURL = req.body.longURL;
+  const longURL = req.body.longURL;
+  const shortURL = generateRandomString();
   urlDatabase[shortURL] = longURL;
   res.redirect(`/urls/${shortURL}`);
-  // console.log(req.body);  // Log the POST request body to the console
-  // res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/urls/new", (req, res) => {
