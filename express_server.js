@@ -23,13 +23,14 @@ const urlDatabase = {
 };
 
 app.post("/login", (req, res) => {
-  const templateVars = {urls: urlDatabase};
-  res.cookie(username, {"username": "urls/login"});
+  const username = req.body.username; 
+  const templateVars = { username: username};
+  res.cookie("username", username);
   res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = {urls: urlDatabase};
+  const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
   res.render("urls_index", templateVars);
 });
 
@@ -60,7 +61,7 @@ app.post("/u/:shortURL", (req, res) => {
 
 //new route using paramaters.. the ":" in front of the id(shortURL), indicates that shortURL is a parameter and this value will be available in the req.params object
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
+  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"]};
   res.render("urls_show", templateVars);
 });
 
