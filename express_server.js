@@ -24,8 +24,8 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-const generateRandomString = function () {
-  return Math.random().toString(36).slice(0, 6)
+const generateRandomString = function() {
+  return Math.random().toString(36).slice(0, 6);
 };
 
 app.post("/urls", (req, res) => {
@@ -51,7 +51,7 @@ app.post("/u/:shortURL", (req, res) => {
 
 //new route using paramaters.. the ":" in front of the id(shortURL), indicates that shortURL is a parameter and this value will be available in the req.params object
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]}
+  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
   res.render("urls_show", templateVars);
 });
 
