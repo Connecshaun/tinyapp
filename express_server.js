@@ -10,6 +10,9 @@ app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+//install and require cookie parser
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 
 //REQUEST && RESPONSE
@@ -18,6 +21,12 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+app.post("/login", (req, res) => {
+  const templateVars = {urls: urlDatabase};
+  res.cookie(username, {"username": "urls/login"});
+  res.redirect("/urls");
+});
 
 app.get("/urls", (req, res) => {
   const templateVars = {urls: urlDatabase};
@@ -68,7 +77,6 @@ app.post("/urls/:shortURL", (req, res) => {
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect("/urls");
 });
-
 
 
 
