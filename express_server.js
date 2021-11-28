@@ -16,16 +16,22 @@ app.use(cookieParser());
 
 
 //REQUEST && RESPONSE
-
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  // "b2xVn2": "http://www.lighthouselabs.ca",
+  // "9sm5xK": "http://www.google.com"
 };
 
 app.post("/login", (req, res) => {
   const username = req.body.username; 
   const templateVars = { username: username};
   res.cookie("username", username);
+  res.redirect("/urls");
+});
+
+app.post("/logout", (req, res) => {
+  const username = req.body.username; 
+  const templateVars = {username: username};
+  res.clearCookie("username", username);
   res.redirect("/urls");
 });
 
@@ -46,7 +52,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {urls: urlDatabase, username: req.cookies["username"]} //NOT WORKING
+  const templateVars = {urls: urlDatabase, username: req.cookies["username"]}
   res.render("urls_new", templateVars);
 });
 
