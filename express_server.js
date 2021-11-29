@@ -21,6 +21,11 @@ const urlDatabase = {
   // "9sm5xK": "http://www.google.com"
 };
 
+app.get("/register", (req, res) => {
+  const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
+  res.render("registration", templateVars);
+});
+
 app.post("/login", (req, res) => {
   const username = req.body.username; 
   const templateVars = { username: username};
