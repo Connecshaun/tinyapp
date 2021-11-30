@@ -48,18 +48,17 @@ app.post("/register", (req, res) => {
     password: req.body.password
   }
   if (!newUser.email || !newUser.password ) {
-    return res.status(400).send("Invalid email or password")
+    return res.status(400).send("Invalid email or password");
   }
-  console.log(users)
+  // console.log(users)
   for (const key in users) {
-    console.log(users[key].email, newUser.email);
+    // console.log(users[key].email, newUser.email);
     if (users[key]["email"] === newUser.email) {
-      return res.status(400).send("Email already exists")
+      return res.status(400).send("Email already exists");
     }
   }
   users[user_id] = newUser;
   res.cookie("user_id", user_id);
-
   res.redirect("/urls");
 });
 
