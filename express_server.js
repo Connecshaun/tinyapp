@@ -15,15 +15,40 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 
-//REQUEST && RESPONSE
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  }
+};
+
 const urlDatabase = {
   // "b2xVn2": "http://www.lighthouselabs.ca",
   // "9sm5xK": "http://www.google.com"
 };
 
+const generateRandomString = function() {
+  return Math.random().toString(36).slice(0, 6);
+};
+
+//REQUEST && RESPONSE
 app.get("/register", (req, res) => {
   const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
   res.render("registration", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  const randomID = generateRandomString();
+  const newUser = {
+    id: randomID,
+    email: req.body.email,
+    password: req.body.password
+  }
+  users[randomID] = newUser;
+  res.cookie("id", newUser.id);
+  console.log(users)
+  res.redirect("/urls");
 });
 
 app.post("/login", (req, res) => {
@@ -44,10 +69,6 @@ app.get("/urls", (req, res) => {
   const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
   res.render("urls_index", templateVars);
 });
-
-const generateRandomString = function() {
-  return Math.random().toString(36).slice(0, 6);
-};
 
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
