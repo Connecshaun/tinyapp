@@ -34,27 +34,39 @@ const generateRandomString = function() {
 
 //REQUEST && RESPONSE
 app.get("/register", (req, res) => {
-  const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
+  const cookieID = req.cookies["user_id"];
+  const user = users[`${cookieID}`];
+  const templateVars = {urls: urlDatabase, user: user};
   res.render("registration", templateVars);
 });
 
 app.post("/register", (req, res) => {
-  const randomID = generateRandomString();
+  const user_id = generateRandomString();
   const newUser = {
-    id: randomID,
+    id: user_id,
     email: req.body.email,
     password: req.body.password
   }
-  users[randomID] = newUser;
-  res.cookie("id", newUser.id);
+  if (!newUser.email || !newUser.password ) {
+    return res.status(400).send("Invalid email or password")
+  }
   console.log(users)
+  for (const key in users) {
+    console.log(users[key].email, newUser.email);
+    if (users[key]["email"] === newUser.email) {
+      return res.status(400).send("Email already exists")
+    }
+  }
+  users[user_id] = newUser;
+  res.cookie("user_id", user_id);
+
   res.redirect("/urls");
 });
 
 app.post("/login", (req, res) => {
   const username = req.body.username; 
-  const templateVars = { username: username};
   res.cookie("username", username);
+  const templateVars = { username: username};
   res.redirect("/urls");
 });
 
@@ -66,7 +78,9 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
+  const cookieID = req.cookies["user_id"];
+  const user = users[`${cookieID}`];
+  const templateVars = {urls: urlDatabase, user: user};
   res.render("urls_index", templateVars);
 });
 
@@ -78,7 +92,9 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = {urls: urlDatabase, username: req.cookies["username"]}
+  const cookieID = req.cookies["user_id"];
+  const user = users[`${cookieID}`];
+  const templateVars = {urls: urlDatabase, user: user};
   res.render("urls_new", templateVars);
 });
 
@@ -94,7 +110,9 @@ app.post("/u/:shortURL", (req, res) => {
 
 //new route using paramaters.. the ":" in front of the id(shortURL), indicates that shortURL is a parameter and this value will be available in the req.params object
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"]};
+  const cookieID = req.cookies["user_id"];
+  const user = users[`${cookieID}`];
+  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user:user};
   res.render("urls_show", templateVars);
 });
 
