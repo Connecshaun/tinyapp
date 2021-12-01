@@ -19,8 +19,23 @@ const users = {
 };
 
 const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
+//helper function to display urls based on user
+const getUrlsByUser = function(id) {
+  const newObject = {
+  }
+  for (const shortURL in urlDatabase) {
+    if (id === urlDatabase[shortURL].userID) {
+      newObject[shortURL] = urlDatabase[shortURL]
+    }
+  }
+  return newObject;
+}
+
+//helper function to randomize URL and IDs
 const generateRandomString = function() {
   return Math.random().toString(36).slice(0, 6);
 };
@@ -48,7 +63,6 @@ app.post("/register", (req, res) => {
     }
   }
   users[user_id] = newUser;
-  console.log(users)
   res.cookie("user_id", user_id);
   res.redirect("/urls");
 });
@@ -81,23 +95,26 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  console.log(req)
   const cookieID = req.cookies["user_id"];
   const user = users[`${cookieID}`];
-  const templateVars = {urls: urlDatabase, user: user};
+  const newURLDatabase = getUrlsByUser(cookieID);
+  const templateVars = {urls: newURLDatabase, user: user};
   res.render("urls_index", templateVars);
 });
 
+//redirects on push of edit button
 app.post("/urls", (req, res) => {
+  const cookieID = req.cookies["user_id"];
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = {longURL, userID: cookieID};
   res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/urls/new", (req, res) => {
   const cookieID = req.cookies["user_id"];
   const user = users[`${cookieID}`];
+  console.log(user)
   const templateVars = {urls: urlDatabase, user: user};
   res.render("urls_new", templateVars);
 });
@@ -133,6 +150,7 @@ app.post("/urls/:shortURL", (req, res) => {
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect("/urls");
 });
+
 
 
 
