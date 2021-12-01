@@ -1,19 +1,14 @@
-
 const express = require("express");
 const app = express();
 const PORT = 8080;
 
-//tells our express app to use EJS as its template engine
 app.set("view engine", "ejs");
 
-//install and require body-parser to make a POST request readable
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-//install and require cookie parser
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
-
 
 const users = { 
   "userRandomID": {
@@ -24,15 +19,12 @@ const users = {
 };
 
 const urlDatabase = {
-  // "b2xVn2": "http://www.lighthouselabs.ca",
-  // "9sm5xK": "http://www.google.com"
 };
 
 const generateRandomString = function() {
   return Math.random().toString(36).slice(0, 6);
 };
 
-//REQUEST && RESPONSE
 app.get("/register", (req, res) => {
   const cookieID = req.cookies["user_id"];
   const user = users[`${cookieID}`];
@@ -50,14 +42,13 @@ app.post("/register", (req, res) => {
   if (!newUser.email || !newUser.password ) {
     return res.status(400).send("Invalid email or password");
   }
-  // console.log(users)
   for (const key in users) {
-    // console.log(users[key].email, newUser.email);
     if (users[key]["email"] === newUser.email) {
       return res.status(400).send("Email already exists");
     }
   }
   users[user_id] = newUser;
+  console.log(users)
   res.cookie("user_id", user_id);
   res.redirect("/urls");
 });
@@ -69,21 +60,28 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
+// Update the POST /login endpoint to look up the email address (submitted via the login form) in the user object.
 app.post("/login", (req, res) => {
-  const username = req.body.username; 
-  res.cookie("username", username);
-  const templateVars = { username: username};
-  res.redirect("/urls");
+  const email = req.body.email;
+  const password = req.body.password;
+  for (const key in users) {
+    if(users[key]["email"] === email && users[key]["password"] === password) {
+      const validID = users[key]["id"]
+      res.cookie("user_id", validID).redirect("/urls");
+    }
+  }
+  return res.status(403).send("403 Forbidden")
 });
 
 app.post("/logout", (req, res) => {
-  const username = req.body.username; 
-  const templateVars = {username: username};
-  res.clearCookie("username", username);
+  const validID = req.cookies.user_id;
+  // const templateVars = {username: username};
+  res.clearCookie("user_id", validID);
   res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
+  console.log(req)
   const cookieID = req.cookies["user_id"];
   const user = users[`${cookieID}`];
   const templateVars = {urls: urlDatabase, user: user};
