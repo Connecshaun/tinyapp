@@ -10,7 +10,17 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <% if(user) { %>   
+    <!-- header links for register and log in-->
+    <% if (!user) { %>
+    <a class="nav-item nav-link" href="/login">Login</a>
+    <a class="nav-item nav-link" href="/register">Register</a>
+    <% } else { %>
+      <form method="POST" action="/logout">
+        <a>Logged in As: <%=user.email%></a>
+        <button type="submit" class="btn btn-outline-dark">Logout</button>
+      </form>
+      <% } %>
+    <!-- <% if(user) { %>   
       <span>
         <form method="POST" action="/logout">
           Logged in As: <%=user.email%>
@@ -23,7 +33,7 @@
           <input type="text" name="username">
           <button type="submit" class="btn btn-outline-dark">Login</button>
         </form>
-        <% } %>
+        <% } %> -->
   </nav>
 </header>
 
