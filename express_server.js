@@ -9,7 +9,9 @@ app.use(cookieSession({
   name: 'session',
   keys: ['asfasdg', 'asfsdge']
 }));
+const {getUrlsByUser, getUserByEmail, generateRandomString} = require('./helpers');
 const bcrypt = require('bcrypt');
+
 
 
 const users = {
@@ -30,33 +32,6 @@ const urlDatabase = {
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" },
   c4AoTw: { longURL: "https://www.cnn.com", userID: "bK562W" },
   s6KlSr: { longURL: "https://www.lighthouselabs.ca", userID: "bK562W" }
-};
-
-//helper function to display urls based on user
-const getUrlsByUser = function(id) {
-  const newObject = {};
-
-  for (const shortURL in urlDatabase) {
-    if (id === urlDatabase[shortURL].userID) {
-      newObject[shortURL] = urlDatabase[shortURL];
-    }
-  }
-  return newObject;
-};
-
-//helper function to get user by email
-const getUserByEmail = function(email, database) {
-  for (const user in database) {
-    if (users[user]["email"] === email) {
-      return user;
-    }
-  }
-  return false;
-};
-
-//helper function to randomize URL and IDs
-const generateRandomString = function() {
-  return Math.random().toString(36).slice(0, 6);
 };
 
 app.get("/register", (req, res) => {
@@ -113,7 +88,7 @@ app.post("/logout", (req, res) => {
 app.get("/urls", (req, res) => {
   const cookieID = req.session["user_id"];
   const user = users[`${cookieID}`];
-  const newURLDatabase = getUrlsByUser(cookieID);
+  const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
   const templateVars = { urls: newURLDatabase, user: user };
   res.render("urls_index", templateVars);
 });
@@ -138,7 +113,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const cookieID = req.session["user_id"];
   const user = users[`${cookieID}`];
-  const newURLDatabase = getUrlsByUser(cookieID);
+  const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: newURLDatabase[req.params.shortURL]["longURL"], user: user
@@ -163,7 +138,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const cookieID = req.session["user_id"];
-  const newURLDatabase = getUrlsByUser(cookieID);
+  const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
   const longURL = newURLDatabase[req.params.shortURL]["longURL"];
   res.redirect(longURL);
 });
