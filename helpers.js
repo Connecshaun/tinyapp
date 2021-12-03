@@ -20,7 +20,7 @@ const getUserByEmail = function(email, database) {
       return user;
     }
   }
-  return false;
+  return undefined;
 };
 
 //helper function to randomize URL and IDs
