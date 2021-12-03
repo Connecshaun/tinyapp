@@ -119,7 +119,9 @@ app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = {longURL, userID: cookieID};
+  if (cookieID) {
   res.redirect(`/urls/${shortURL}`); //redirects on push of edit button to /urls/${shortURL}
+}
 });
 
 app.get("/urls/new", (req, res) => {
@@ -131,6 +133,7 @@ app.get("/urls/new", (req, res) => {
 
 //new route using paramaters.. the ":" in front of the id(shortURL), indicates that shortURL is a parameter and this value will be available in the req.params object
 app.get("/urls/:shortURL", (req, res) => {
+  console.log("123") // once I click edit button, 123 will display 
   const cookieID = req.cookies["user_id"];
   const user = users[`${cookieID}`];
   const newURLDatabase = getUrlsByUser(cookieID);
@@ -141,15 +144,18 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  console.log(shortURL)
+  console.log(shortURL) //once we click submit
   console.log(urlDatabase[shortURL])
   urlDatabase[shortURL]["longURL"] = req.body.longURL
   res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  const cookieID = req.cookies["user_id"];
   const shortURL = req.params.shortURL;
-  delete urlDatabase[shortURL];
+  if (cookieID) {
+    delete urlDatabase[shortURL]
+  };
   res.redirect("/urls");
 });
 
