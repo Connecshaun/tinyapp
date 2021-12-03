@@ -13,12 +13,12 @@ const users = {
   "aJ48lW": {
     id: "aJ48lW", 
     email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    password: "$2b$10$gBqQc0nU7hZ/VNvbXO4wI.3iMdbQgMGF5SmmJ1gFt8ipRgkesGhde" //pw 12345
   },
   "bK562W": {
     id: "bK562W", 
     email: "connecshaun@gmail.com", 
-    password: "1"
+    password: "$2b$10$gBqQc0nU7hZ/VNvbXO4wI.3iMdbQgMGF5SmmJ1gFt8ipRgkesGhde" //pw 12345
   }
 };
 
@@ -72,7 +72,6 @@ app.post("/register", (req, res) => {
       return res.status(400).send("Email already exists");
     }
   }
-  console.log(hashedPassword)
   users[user_id] = newUser;
   res.cookie("user_id", user_id);
   res.redirect("/urls");
@@ -88,9 +87,10 @@ app.get("/login", (req, res) => {
 //login endpoint to check email & password (submitted via the login form) is in the user object.
 app.post("/login", (req, res) => {
   const email = req.body.email;
-  const password = req.body.password;
+  const newPassword = req.body.password;
+
   for (const key in users) {
-    if(users[key]["email"] === email && users[key]["password"] === password) {
+    if(users[key]["email"] === email && (bcrypt.compareSync(newPassword, users[key]["password"]))) {
       const validID = users[key]["id"]
       res.cookie("user_id", validID)
       return res.redirect("/urls");
