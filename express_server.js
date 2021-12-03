@@ -1,14 +1,13 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
-
 app.set("view engine", "ejs");
-
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
-
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
+const bcrypt = require('bcrypt');
+
 
 const users = { 
   "aJ48lW": {
@@ -58,10 +57,12 @@ app.get("/register", (req, res) => {
 //when clicking the register button.... if successful, redirect to URLS
 app.post("/register", (req, res) => {
   const user_id = generateRandomString();
+  const newPassword = req.body.password;
+  const hashedPassword = bcrypt.hashSync(newPassword, 10);
   const newUser = {
     id: user_id,
     email: req.body.email,
-    password: req.body.password
+    password: hashedPassword
   }
   if (!newUser.email || !newUser.password ) {
     return res.status(400).send("Invalid email or password");
@@ -71,6 +72,7 @@ app.post("/register", (req, res) => {
       return res.status(400).send("Email already exists");
     }
   }
+  console.log(hashedPassword)
   users[user_id] = newUser;
   res.cookie("user_id", user_id);
   res.redirect("/urls");
