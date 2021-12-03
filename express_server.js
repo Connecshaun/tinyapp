@@ -4,6 +4,9 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+const cookieSession = require('cookie-session')
+app.use(cookieSession({
+  name: 'session'}),
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const bcrypt = require('bcrypt');
