@@ -1,5 +1,4 @@
 const { assert } = require("chai");
-
 const { getUserByEmail } = require("../helpers.js");
 
 const users = {
@@ -17,22 +16,18 @@ const users = {
 
 describe("getUserByEmail", function() {
   it("should return a user with valid email", function() {
-    const user = getUserByEmail("user@example.com", users)
+    const user = getUserByEmail("user@example.com", users);
     const expectedOutput = "aJ48lW";
     assert.equal(user, expectedOutput);
   });
-
   it("should return undefined if user email is not in our urls database", function() {
-    const user = getUserByEmail("hellojello@pudding.com", users)
+    const user = getUserByEmail("hellojello@pudding.com", users);
     const expectedOutput = undefined;
     assert.isUndefined(user, expectedOutput);
   });
-  
-    it("should return undefined if user email is not in our urls database", function() {
-      const user = getUserByEmail("hellojello@pudding.com", users)
-      const expectedOutput = undefined;
-      assert.isUndefined(user, expectedOutput);
-    });
-
-
+  it("should return undefined if no email is entered", function() {
+    const user = getUserByEmail(users);
+    const expectedOutput = undefined;
+    assert.isUndefined(user, expectedOutput);
+  });
 });
