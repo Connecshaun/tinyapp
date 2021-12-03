@@ -33,7 +33,7 @@ const urlDatabase = {
 };
 
 //helper function to display urls based on user
-const getUrlsByUser = function (id) {
+const getUrlsByUser = function(id) {
   const newObject = {};
 
   for (const shortURL in urlDatabase) {
@@ -45,7 +45,7 @@ const getUrlsByUser = function (id) {
 };
 
 //helper function to get user by email
-const getUserByEmail = function (email, database) {
+const getUserByEmail = function(email, database) {
   for (const user in database) {
     if (users[user]["email"] === email) {
       return user;
@@ -55,7 +55,7 @@ const getUserByEmail = function (email, database) {
 };
 
 //helper function to randomize URL and IDs
-const generateRandomString = function () {
+const generateRandomString = function() {
   return Math.random().toString(36).slice(0, 6);
 };
 
@@ -97,7 +97,6 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const validID = getUserByEmail(email, users);
-  console.log(req.session)
   const newPassword = req.body.password;
   if (getUserByEmail(email, users) && (bcrypt.compareSync(newPassword, users[validID]["password"]))) {
     req.session.user_id = validID;
