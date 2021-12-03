@@ -33,7 +33,7 @@ const urlDatabase = {
 };
 
 //helper function to display urls based on user
-const getUrlsByUser = function(id) {
+const getUrlsByUser = function (id) {
   const newObject = {};
 
   for (const shortURL in urlDatabase) {
@@ -44,8 +44,18 @@ const getUrlsByUser = function(id) {
   return newObject;
 };
 
+//helper function to get user by email
+const getUserByEmail = function (email, database) {
+  for (const user in database) {
+    if (users[user]["email"] === email) {
+      return user;
+    }
+  }
+  return false;
+};
+
 //helper function to randomize URL and IDs
-const generateRandomString = function() {
+const generateRandomString = function () {
   return Math.random().toString(36).slice(0, 6);
 };
 
@@ -57,21 +67,20 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
+  const email = req.body.email;
   const user_id = generateRandomString();
   const newPassword = req.body.password;
   const hashedPassword = bcrypt.hashSync(newPassword, 10);
   const newUser = {
     id: user_id,
-    email: req.body.email,
+    email: email,
     password: hashedPassword
   };
   if (!newUser.email || !newUser.password) {
     return res.status(400).send("Invalid email or password");
   }
-  for (const key in users) {
-    if (users[key]["email"] === newUser.email) {
-      return res.status(400).send("Email already exists");
-    }
+  if (getUserByEmail(email, users)) {
+    return res.status(400).send("Email already exists");
   }
   users[user_id] = newUser;
   req.session.user_id = user_id;
@@ -87,13 +96,12 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
+  const validID = getUserByEmail(email, users);
+  console.log(req.session)
   const newPassword = req.body.password;
-  for (const key in users) {
-    if (users[key]["email"] === email && (bcrypt.compareSync(newPassword, users[key]["password"]))) {
-      const validID = users[key]["id"];
-      req.session.user_id = validID;
-      return res.redirect("/urls");
-    }
+  if (getUserByEmail(email, users) && (bcrypt.compareSync(newPassword, users[validID]["password"]))) {
+    req.session.user_id = validID;
+    return res.redirect("/urls");
   }
   return res.status(403).send("403 Forbidden");
 });
@@ -156,7 +164,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const cookieID = req.session["user_id"];
-  // const user = users[`${cookieID}`];
   const newURLDatabase = getUrlsByUser(cookieID);
   const longURL = newURLDatabase[req.params.shortURL]["longURL"];
   res.redirect(longURL);
