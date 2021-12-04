@@ -6,19 +6,24 @@
 
 ## Final Product
 
-!["First a user needs to log in (or click the link to register as a new user)"](assetsForREADME/logInPage.png)
+First a user needs to log in (or click the link to register as a new user).
+!["Log in screen"](assetsForREADME/logInPage.png)
 
-!["Once logged in (or newly registered) the user is directed to the URLS page"](assetsForREADME/loggedInUser.png)
+Once logged in (or newly registered) the user is directed to the URLS page.
+!["URLS screen"](assetsForREADME/loggedInUser.png)
 
-!["Now the user can select "Create New URL". Now the user can create their first shortened URL by submitting a URL of their choice"](assetsForREADME/createURL.png)
+Now the user can select "Create New URL". Now the user can create their first shortened URL by submitting a URL of their choice.
+!["Create New URL"](assetsForREADME/createURL.png)
 
-!["Once the URL of choice has been submitted, the user can now see a clickable short URL has been generated.  There is also an option to edit/or rename the URL if desired. In this case the user has desired it and is renaming their pizzahut link as delicious pizza :pizza:"](assetsForREADME/shortURL.png)
+Once the URL of choice has been submitted, the user can now see a clickable short URL has been generated.  There is also an option to edit/or rename the URL if desired. In this case the user has desired it and is renaming their pizzahut link as delicious pizza :pizza:
+!["Edit URL"](assetsForREADME/shortURL.png)
 
-!["Once the user has submitted their short URL with any custom naming applied, the user is directed to their URL database. If the user clicks on the "edit" button here, they will return back to the previous page where they can edit the url name. If the "delete button is clicked, the item will be removed from the database"](assetsForREADME/URLS.png)
-!["Edit"]
-(assetsForREADME/editURLS.png)
-!["Delete"]
-(assetsForREADME/deleteURLS.png)
+Once the user has submitted their short URL with any custom naming applied, the user is directed to their URL database. If the user clicks on the "edit" button here, they will return back to the previous page where they can edit the url name. If the "delete button is clicked, the item will be removed from the database
+!["Users URL Database"](assetsForREADME/URLS.png)
+
+!["Edit Previously Created URL"](assetsForREADME/editURLS.png)
+
+!["Delete URL in Database"](assetsForREADME/deleteURLS.png)
 
 ## Dependencies
 
