@@ -113,10 +113,11 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const cookieID = req.session["user_id"];
   const user = users[`${cookieID}`];
+  const shortURL = req.params.shortURL;
   const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
   const templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: newURLDatabase[req.params.shortURL]["longURL"], user: user
+    shortURL: shortURL,
+    longURL: newURLDatabase[shortURL]["longURL"], user: user
   };
   res.render("urls_show", templateVars);
 });
@@ -142,15 +143,6 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = newURLDatabase[req.params.shortURL]["longURL"];
   res.redirect(longURL);
 });
-
-app.post("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
-});
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
