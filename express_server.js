@@ -1,17 +1,16 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+const cookieSession = require('cookie-session');
+const bcrypt = require('bcrypt');
+const {getUrlsByUser, getUserByEmail, generateRandomString} = require('./helpers');
 const app = express();
 const PORT = 8080;
-app.set("view engine", "ejs");
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
-const cookieSession = require('cookie-session');
 app.use(cookieSession({
   name: 'session',
   keys: ['asfasdg', 'asfsdge']
 }));
-const {getUrlsByUser, getUserByEmail, generateRandomString} = require('./helpers');
-const bcrypt = require('bcrypt');
-
+app.set("view engine", "ejs");
 
 
 const users = {
@@ -77,7 +76,7 @@ app.post("/login", (req, res) => {
     req.session.user_id = validID;
     return res.redirect("/urls");
   }
-  return res.status(403).send("403 Forbidden");
+  return res.status(403).send("Oops, you may have forgotten to input your login details 🙃");
 });
 
 app.post("/logout", (req, res) => {
@@ -140,8 +139,13 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const cookieID = req.session["user_id"];
   const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
-  const longURL = newURLDatabase[req.params.shortURL]["longURL"];
-  res.redirect(longURL);
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL]["longURL"];
+  if (cookieID) {
+    return res.redirect(longURL);
+  } else {
+    return res.status(403).send("Please login to access URLs 🙂");
+  }
 });
 
 app.listen(PORT, () => {
