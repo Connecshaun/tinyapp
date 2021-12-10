@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
-const {getUrlsByUser, getUserByEmail, generateRandomString} = require('./helpers');
+const { getUrlsByUser, getUserByEmail, generateRandomString } = require('./helpers');
 const app = express();
 const PORT = 8080;
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -138,7 +138,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const cookieID = req.session["user_id"];
-  const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL]["longURL"];
   if (cookieID) {
