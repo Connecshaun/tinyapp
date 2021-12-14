@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
-const { getUrlsByUser, getUserByEmail, generateRandomString } = require('./helpers');
+const { getUrlsByUser, getUserByEmail, generateRandomString, usersURL } = require('./helpers');
 const app = express();
 const PORT = 8080;
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -123,11 +123,16 @@ app.get("/urls/:shortURL", (req, res) => {
   const user = users[`${cookieID}`];
   const shortURL = req.params.shortURL;
   const newURLDatabase = getUrlsByUser(cookieID, urlDatabase);
-  const templateVars = {
-    shortURL: shortURL,
-    longURL: newURLDatabase[shortURL]["longURL"], user: user
-  };
-  res.render("urls_show", templateVars);
+  if (usersURL(cookieID, urlDatabase, shortURL)) {
+    const templateVars = {
+      shortURL: shortURL,
+      longURL: newURLDatabase[shortURL]["longURL"], user: user
+    }
+    res.render("urls_show", templateVars);
+  } else {
+    return res.status(403).send("Sadly, this URL is not yours to edit. 🙁");
+  }
+
 });
 
 app.post("/urls/:shortURL", (req, res) => {

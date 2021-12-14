@@ -2,7 +2,7 @@
 
 
 //helper function to display urls based on user
-const getUrlsByUser = function(id,urlDatabase) {
+const getUrlsByUser = function (id, urlDatabase) {
   const newObject = {};
 
   for (const shortURL in urlDatabase) {
@@ -14,7 +14,7 @@ const getUrlsByUser = function(id,urlDatabase) {
 };
 
 //helper function to get user by email
-const getUserByEmail = function(email, database) {
+const getUserByEmail = function (email, database) {
   for (const user in database) {
     if (database[user]["email"] === email) {
       return user;
@@ -23,9 +23,18 @@ const getUserByEmail = function(email, database) {
   return undefined;
 };
 
+//does URL belong to active user 
+const usersURL = function (activeUserID, database, shortURLID) {
+  const urlUserID = database[shortURLID]["userID"];
+  if (urlUserID === activeUserID) {
+    return true;
+  }
+  return false;
+}
+
 //helper function to randomize URL and IDs
-const generateRandomString = function() {
+const generateRandomString = function () {
   return Math.random().toString(36).slice(0, 6);
 };
 
-module.exports = {getUrlsByUser, getUserByEmail, generateRandomString};
+module.exports = { getUrlsByUser, getUserByEmail, usersURL, generateRandomString };
