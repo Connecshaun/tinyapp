@@ -12,7 +12,6 @@ app.use(cookieSession({
 }));
 app.set("view engine", "ejs");
 
-
 const users = {
   "aJ48lW": {
     id: "aJ48lW",
@@ -32,6 +31,7 @@ const urlDatabase = {
   c4AoTw: { longURL: "https://www.cnn.com", userID: "bK562W" },
   s6KlSr: { longURL: "https://www.lighthouselabs.ca", userID: "bK562W" }
 };
+
 
 app.get("/register", (req, res) => {
   const cookieID = req.session["user_id"];
@@ -59,6 +59,15 @@ app.post("/register", (req, res) => {
   users[user_id] = newUser;
   req.session.user_id = user_id;
   res.redirect("/urls");
+});
+
+app.get("/", (req, res) => {
+  const cookieID = req.session["user_id"];
+  if (cookieID) {
+    return res.redirect("/urls");
+  } else {
+    return res.redirect("/login");
+  }
 });
 
 app.get("/login", (req, res) => {
